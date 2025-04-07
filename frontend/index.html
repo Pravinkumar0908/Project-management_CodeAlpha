@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --success-color: #4cc9f0;
+            --error-color: #f72585;
+            --text-color: #2b2d42;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --input-border: #e0e0e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .background-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.2;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .shape-1 {
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+        
+        .shape-2 {
+            bottom: -80px;
+            left: -80px;
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(to right, var(--success-color), var(--primary-color));
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            font-size: 22px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 15px;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #fff;
+            color: var(--text-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+        
+        button {
+            width: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 15px;
+            color: #666;
+        }
+        
+        .toggle-form a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .toggle-form a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        
+        .toggle-form a:hover::after {
+            width: 100%;
+        }
+        
+        #message {
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            animation: fadeIn 0.5s;
+        }
+        
+        .error {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--error-color);
+            border-left: 4px solid var(--error-color);
+        }
+        
+        .success {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .loader {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            display: none;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            display: none;
+            vertical-align: middle;
+        }
+        
+        .form-slide {
+            animation: slideInRight 0.5s forwards;
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Password strength indicator */
+        .password-strength {
+            height: 5px;
+            margin-top: 8px;
+            border-radius: 3px;
+            background-color: #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            border-radius: 3px;
+            transition: width 0.5s, background-color 0.5s;
+        }
+        
+        .strength-text {
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        /* Animation for form switching */
+        .exit-left {
+            animation: exitLeft 0.5s forwards;
+        }
+        
+        .exit-right {
+            animation: exitRight 0.5s forwards;
+        }
+        
+        @keyframes exitLeft {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-50px); }
+        }
+        
+        @keyframes exitRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(50px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="background-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+        
+        <div class="content">
+            <h2 class="animate__animated animate__fadeInDown">Project Management System</h2>
+            
+            <div id="loginForm" class="animate__animated animate__fadeIn">
+                <h3>Login to Your Account</h3>
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="input-icon fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="input-with-icon">
+                        <i class="input-icon fas fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password">
+                    </div>
+                </div>
+                <button id="loginButton">
+                    <span class="loader" id="loginLoader"></span>
+                    <span class="loading-text" id="loginLoadingText">Signing in...</span>
+                    <span class="btn-text">Sign In</span>
+                </button>
+                <div class="toggle-form">
+                    <p>Don't have an account? <a href="#" id="showSignup">Create Account</a></p>
+                </div>
+            </div>
+
+            <div id="signupForm" class="hidden">
+                <h3>Create New Account</h3>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <div class="input-with-icon">
+                        <i class="input-icon fas fa-user"></i>
+                        <input type="text" id="fullName" placeholder="Enter your full name" autocomplete="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mobileNumber">Mobile Number</label>
+                    <div class="input-with-icon">
+                        <i class="input-icon fas fa-mobile-alt"></i>
+                        <input type="tel" id="mobileNumber" placeholder="Enter your mobile number" autocomplete="tel">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="input-icon fas fa-envelope"></i>
+                        <input type="email" id="signupEmail" placeholder="Enter email address" autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <div class="input-with-icon">
+                        <i class="input-icon fas fa-lock"></i>
+                        <input type="password" id="signupPassword" placeholder="Choose a strong password" autocomplete="new-password">
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-meter" id="strengthMeter"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText"></div>
+                </div>
+                <div class="form-group">
+                    <label for="role">Select Your Role</label>
+                    <div class="input-with-icon">
+                        <i class="input-icon fas fa-user-tag"></i>
+                        <select id="role">
+                            <option value="team_member">Team Member</option>
+                            <option value="manager">Project Manager</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="signupButton">
+                    <span class="loader" id="signupLoader"></span>
+                    <span class="loading-text" id="signupLoadingText">Creating account...</span>
+                    <span class="btn-text">Create Account</span>
+                </button>
+                <div class="toggle-form">
+                    <p>Already have an account? <a href="#" id="showLogin">Sign In</a></p>
+                </div>
+            </div>
+
+            <div id="message" class="hidden"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmVWaGD-XXrDpH4NN8C31pyps24jirAJU",
+            authDomain: "promanag-6b374.firebaseapp.com",
+            projectId: "promanag-6b374",
+            storageBucket: "promanag-6b374.firebaseapp.com",
+            messagingSenderId: "294380471934",
+            appId: "1:294380471934:web:ce389b0b1be289e5a0ba2f",
+            measurementId: "G-MJV4M2KZDW"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const messageDiv = document.getElementById('message');
+        const loginLoader = document.getElementById('loginLoader');
+        const signupLoader = document.getElementById('signupLoader');
+        const loginLoadingText = document.getElementById('loginLoadingText');
+        const signupLoadingText = document.getElementById('signupLoadingText');
+        const btnTexts = document.querySelectorAll('.btn-text');
+        
+        // Password strength elements
+        const passwordInput = document.getElementById('signupPassword');
+        const strengthMeter = document.getElementById('strengthMeter');
+        const strengthText = document.getElementById('strengthText');
+        
+        // Form toggle with animation
+        document.getElementById('showSignup').addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('exit-left');
+            setTimeout(() => {
+                loginForm.classList.add('hidden');
+                loginForm.classList.remove('exit-left');
+                signupForm.classList.remove('hidden');
+                signupForm.classList.add('animate__animated', 'animate__fadeInRight');
+                messageDiv.classList.add('hidden');
+            }, 500);
+        });
+
+        document.getElementById('showLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            signupForm.classList.add('exit-right');
+            setTimeout(() => {
+                signupForm.classList.add('hidden');
+                signupForm.classList.remove('exit-right');
+                loginForm.classList.remove('hidden');
+                loginForm.classList.add('animate__animated', 'animate__fadeInLeft');
+                messageDiv.classList.add('hidden');
+            }, 500);
+        });
+
+        // Show message function with animation
+        function showMessage(message, isError = false) {
+            messageDiv.textContent = message;
+            messageDiv.className = isError ? 'error animate__animated animate__fadeIn' : 'success animate__animated animate__fadeIn';
+            messageDiv.classList.remove('hidden');
+        }
+
+        // Function to redirect based on role
+        function redirectBasedOnRole(role) {
+            switch(role) {
+                case 'admin':
+                    window.location.href = '/admin/admindashboard.html';
+                    break;
+                case 'manager':
+                    window.location.href = '/manager/managerdashboard.html';
+                    break;
+                case 'team_member':
+                    window.location.href = '/team/teamdashboard.html';
+                    break;
+                default:
+                    window.location.href = '/dashboard.html';
+            }
+        }
+        
+        // Password strength checker
+        passwordInput.addEventListener('input', checkPasswordStrength);
+        
+        function checkPasswordStrength() {
+            const password = passwordInput.value;
+            let strength = 0;
+            let feedback = '';
+            
+            if (password.length > 6) strength += 20;
+            if (password.length > 10) strength += 20;
+            if (/[A-Z]/.test(password)) strength += 20;
+            if (/[0-9]/.test(password)) strength += 20;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+            
+            strengthMeter.style.width = strength + '%';
+            
+            if (strength <= 20) {
+                strengthMeter.style.backgroundColor = '#f72585';
+                feedback = 'Very weak';
+            } else if (strength <= 40) {
+                strengthMeter.style.backgroundColor = '#f94144';
+                feedback = 'Weak';
+            } else if (strength <= 60) {
+                strengthMeter.style.backgroundColor = '#f9c74f';
+                feedback = 'Medium';
+            } else if (strength <= 80) {
+                strengthMeter.style.backgroundColor = '#90be6d';
+                feedback = 'Strong';
+            } else {
+                strengthMeter.style.backgroundColor = '#43aa8b';
+                feedback = 'Very strong';
+            }
+            
+            strengthText.textContent = feedback;
+            strengthText.style.color = strengthMeter.style.backgroundColor;
+        }
+
+        // Show loading function
+        function showLoading(isLogin = true) {
+            if (isLogin) {
+                loginLoader.style.display = 'inline-block';
+                loginLoadingText.style.display = 'inline-block';
+                document.querySelector('#loginButton .btn-text').style.display = 'none';
+            } else {
+                signupLoader.style.display = 'inline-block';
+                signupLoadingText.style.display = 'inline-block';
+                document.querySelector('#signupButton .btn-text').style.display = 'none';
+            }
+        }
+        
+        // Hide loading function
+        function hideLoading(isLogin = true) {
+            if (isLogin) {
+                loginLoader.style.display = 'none';
+                loginLoadingText.style.display = 'none';
+                document.querySelector('#loginButton .btn-text').style.display = 'inline';
+            } else {
+                signupLoader.style.display = 'none';
+                signupLoadingText.style.display = 'none';
+                document.querySelector('#signupButton .btn-text').style.display = 'inline';
+            }
+        }
+
+        // Form validation
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+        
+        function validateMobile(mobile) {
+            const re = /^\d{10}$/;
+            return re.test(mobile);
+        }
+
+        // Signup function
+        document.getElementById('signupButton').addEventListener('click', async () => {
+            const fullName = document.getElementById('fullName').value.trim();
+            const mobile = document.getElementById('mobileNumber').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const role = document.getElementById('role').value;
+
+            // Validation
+            if (!fullName) {
+                showMessage('Please enter your full name', true);
+                return;
+            }
+            
+            if (!mobile) {
+                showMessage('Please enter your mobile number', true);
+                return;
+            }
+            
+            if (!validateMobile(mobile)) {
+                showMessage('Please enter a valid 10-digit mobile number', true);
+                return;
+            }
+            
+            if (!email) {
+                showMessage('Please enter your email address', true);
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showMessage('Please enter a valid email address', true);
+                return;
+            }
+            
+            if (!password) {
+                showMessage('Please enter a password', true);
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters long', true);
+                return;
+            }
+
+            try {
+                showLoading(false);
+                // Create user account with Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Store additional user information in Firestore
+                await setDoc(doc(db, 'users', user.uid), {
+                    fullName: fullName,
+                    email: email,
+                    mobile: mobile,
+                    role: role,
+                    createdAt: new Date().toISOString()
+                });
+
+                showMessage('Account created successfully! You can now log in.');
+                
+                // Reset form and show login after delay
+                document.getElementById('fullName').value = '';
+                document.getElementById('mobileNumber').value = '';
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+                
+                setTimeout(() => {
+                    signupForm.classList.add('exit-right');
+                    setTimeout(() => {
+                        signupForm.classList.add('hidden');
+                        signupForm.classList.remove('exit-right');
+                        loginForm.classList.remove('hidden');
+                        loginForm.classList.add('animate__animated', 'animate__fadeInLeft');
+                    }, 500);
+                }, 1500);
+                
+            } catch (error) {
+                // If direct signup fails, try backend API
+                try {
+                    const response = await fetch('/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ fullName, mobile, email, password, role }),
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(data.message);
+                        
+                        // Reset form and show login after delay
+                        document.getElementById('fullName').value = '';
+                        document.getElementById('mobileNumber').value = '';
+                        document.getElementById('signupEmail').value = '';
+                        document.getElementById('signupPassword').value = '';
+                        
+                        setTimeout(() => {
+                            signupForm.classList.add('exit-right');
+                            setTimeout(() => {
+                                signupForm.classList.add('hidden');
+                                signupForm.classList.remove('exit-right');
+                                loginForm.classList.remove('hidden');
+                                loginForm.classList.add('animate__animated', 'animate__fadeInLeft');
+                            }, 500);
+                        }, 1500);
+                    } else {
+                        showMessage(data.message || 'Signup failed. Please try again.', true);
+                    }
+                } catch (backendError) {
+                    showMessage('Error: ' + (error.message || 'Failed to create account'), true);
+                }
+            } finally {
+                hideLoading(false);
+            }
+        });
+
+        // Login function
+        document.getElementById('loginButton').addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // Validation
+            if (!email) {
+                showMessage('Please enter your email address', true);
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showMessage('Please enter a valid email address', true);
+                return;
+            }
+            
+            if (!password) {
+                showMessage('Please enter your password', true);
+                return;
+            }
+
+            try {
+                showLoading(true);
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Get user data from Firestore
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    showMessage(`Login successful! Redirecting to ${userData.role} dashboard...`);
+                    
+                    // Save user info to session storage
+                    sessionStorage.setItem('user', JSON.stringify({
+                        uid: user.uid,
+                        email: userData.email,
+                        fullName: userData.fullName,
+                        mobile: userData.mobile,
+                        role: userData.role
+                    }));
+                    
+                    // Show success animation
+                    document.getElementById('loginButton').innerHTML = '<i class="fas fa-check-circle"></i> Success!';
+                    document.getElementById('loginButton').style.background = 'linear-gradient(to right, #4cc9f0, #43aa8b)';
+                    
+                    // Redirect based on role after short delay
+                    setTimeout(() => {
+                        redirectBasedOnRole(userData.role);
+                    }, 1500);
+                } else {
+                    showMessage('User data not found. Please contact support.', true);
+                }
+            } catch (error) {
+                let errorMessage = 'Login failed';
+                
+                // Provide user-friendly error messages
+                if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Incorrect password. Please try again.';
+                } else if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email. Please sign up.';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Too many failed login attempts. Please try again later.';
+                } else {
+                    errorMessage += ': ' + error.message;
+                }
+                
+                showMessage(errorMessage, true);
+            } finally {
+                hideLoading(true);
+            }
+        });
+
+        // Check if user is already logged in
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const userDoc = await getDoc(doc(db, 'users', user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        // Auto redirect if page just loaded and user is logged in
+                        if (document.referrer === '' || 
+                            document.referrer.includes('index.html')) {
+                            redirectBasedOnRole(userData.role);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error checking user state:", error);
+                }
+            }
+        });
+        
+        // Add animation on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.container').classList.add('animate__animated', 'animate__zoomIn');
+        });
+        
+        // Add input animations
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('animate__animated', 'animate__pulse');
+                setTimeout(() => {
+                    input.parentElement.classList.remove('animate__animated', 'animate__pulse');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
